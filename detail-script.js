@@ -6,52 +6,109 @@ document.addEventListener('DOMContentLoaded', function() {
     const params = new URLSearchParams(window.location.search);
     const keywordFromQuery = params.get('q') || '';
     const keyword = keywordFromQuery.replace(/-/g, ' ').trim();
-    
-    function capitalizeEachWord(str) { if (!str) return ''; return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '); }
-    function generateSeoTitle(baseKeyword) { const hookWords = ['Delicious', 'Easy', 'Quick', 'Healthy', 'Tasty', 'Simple', 'Best', 'Amazing', 'Homemade', 'Ultimate']; const randomHook = hookWords[Math.floor(Math.random() * hookWords.length)]; const randomNumber = Math.floor(Math.random() * (50 - 10 + 1)) + 10; const capitalizedKeyword = capitalizeEachWord(baseKeyword); return `${randomHook} ${capitalizedKeyword} Recipe`; }
 
-    // ▼▼▼ FUNGSI BARU: Untuk memproses Spintax {a|b|c} ▼▼▼
-    function processSpintax(text) {
-        const spintaxPattern = /{([^{}]+)}/g;
-        while (spintaxPattern.test(text)) {
-            text = text.replace(spintaxPattern, (match, choices) => {
-                const options = choices.split('|');
-                return options[Math.floor(Math.random() * options.length)];
-            });
+    // ▼▼▼ IMPORTANT: Replace with your Gemini API Key ▼▼▼
+    const GEMINI_API_KEY = 'YOUR_API_KEY'; 
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+
+    function capitalizeEachWord(str) { if (!str) return ''; return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '); }
+    
+    // ▼▼▼ MODIFIED: SEO Title is now more generic ▼▼▼
+    function generateSeoTitle(baseKeyword) { 
+        const hookWords = ['Complete Guide to', 'Everything About', 'An Introduction to', 'The Ultimate Guide to', 'Exploring', 'Amazing Facts About']; 
+        const randomHook = hookWords[Math.floor(Math.random() * hookWords.length)]; 
+        const capitalizedKeyword = capitalizeEachWord(baseKeyword); 
+        return `${randomHook} ${capitalizedKeyword}`; 
+    }
+    
+    // Function to convert simple Markdown from Gemini to HTML
+    function formatGeminiResponseToHtml(text) {
+        if (!text) return '<p>Content is not available.</p>'; // Translated to English
+        
+        let html = text.replace(/\n\n/g, '<p></p>');
+        html = html.replace(/\n/g, '<br>');
+        html = html.replace(/### (.*?)(<br>|$)/g, '<h3>$1</h3>');
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/^\* (.*?)(<br>|$)/gm, '<li>$1</li>');
+        html = html.replace(/^\d+\. (.*?)(<br>|$)/gm, '<li>$1</li>'); // Handle numbered lists
+        
+        if (html.includes('<li>')) {
+            html = '<ul>' + html.replace(/<br><ul>/g, '<ul>').replace(/<\/li><br>/g, '</li>') + '</ul>';
+            html = html.replace(/<\/ul><br><ul>/g, ''); 
         }
-        return text;
+        return html;
     }
 
-    if (!keyword) { detailTitle.textContent = 'Recipe Not Found'; detailBody.innerHTML = '<p>Sorry, the requested recipe could not be found. Please return to the <a href="index.html">homepage</a>.</p>'; if (relatedPostsContainer) { relatedPostsContainer.closest('.related-posts-section').style.display = 'none'; } return; }
+    if (!keyword) { 
+        // ▼▼▼ MODIFIED: "Not Found" message is now more generic and in English ▼▼▼
+        detailTitle.textContent = 'Content Not Found'; 
+        detailBody.innerHTML = '<p>Sorry, the requested content could not be found. Please return to the <a href="index.html">homepage</a>.</p>'; 
+        if (relatedPostsContainer) { relatedPostsContainer.closest('.related-posts-section').style.display = 'none'; } 
+        return; 
+    }
 
-    function populateMainContent(term) {
+    async function populateMainContent(term) {
         const newTitle = generateSeoTitle(term);
         const capitalizedTermForArticle = capitalizeEachWord(term);
-        document.title = `${newTitle} | RecipeFiesta`;
+        document.title = `${newTitle} | RecipeFiesta`; // You might want to change "RecipeFiesta"
         detailTitle.textContent = newTitle;
 
         const imageUrl = `https://tse1.mm.bing.net/th?q=${encodeURIComponent(term)}&w=800&h=1200&c=7&rs=1&p=0&dpr=1.5&pid=1.7`;
         detailImageContainer.innerHTML = `<img src="${imageUrl}" alt="${newTitle}">`;
 
-        // ▼▼▼ ARTIKEL BARU: Template artikel dengan format Spintax ▼▼▼
-        const spintaxArticleTemplate = `
-            <p>{Welcome to a world of flavor!|Ready for a culinary adventure?|Looking for your next favorite dish?} {Exploring new recipes is the perfect way to bring excitement to your kitchen.|There's nothing better than the aroma of a home-cooked meal.|Let's create something delicious together!} Today, we're spotlighting a truly special recipe for <strong>${capitalizedTermForArticle}</strong>. {It's a dish that's sure to impress|This recipe is a guaranteed winner|Prepare to fall in love with this amazing meal}.</p>
-            <p>We {hope|trust} you {enjoy|love} this {fantastic|wonderful|delicious} <strong>${capitalizedTermForArticle}</strong> recipe. {Feel free to|Don't hesitate} to {share it with your friends|leave a comment below}. {Happy cooking|Enjoy your meal|Bon appétit}!</p>
-            <p>Ready to cook? Click the button above to get the complete, printable, and step-by-step recipe card!</p>
-        `;
+        // ▼▼▼ MODIFIED: Loading message in English ▼▼▼
+        detailBody.innerHTML = '<p><em>Generating your article, please wait...</em></p>';
 
-        // Proses Spintax dan tampilkan hasilnya
-        detailBody.innerHTML = processSpintax(spintaxArticleTemplate);
+        try {
+            // ▼▼▼ MODIFIED: Using the new general-purpose prompt ▼▼▼
+            const prompt = `Generate a comprehensive and engaging article about '${capitalizedTermForArticle}'. The article should be well-structured and easy to read. Please include the following sections:
+
+            1.  **Introduction:** A brief and captivating intro that explains what '${capitalizedTermForArticle}' is and why it's interesting.
+            2.  **Main Body:** Discuss several key aspects, important facts, or main points related to the topic. Use bullet points or numbered lists where appropriate to improve readability.
+            3.  **Conclusion:** A summary of the key points and a concluding thought.
+
+            The entire article must be written in English. Use simple Markdown for formatting (headings, bold text, lists).`;
+
+            const payload = {
+                contents: [{
+                    parts: [{
+                        text: prompt
+                    }]
+                }]
+            };
+
+            const response = await fetch(GEMINI_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`API request failed with status ${response.status}`);
+            }
+
+            const data = await response.json();
+            const articleContent = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            
+            detailBody.innerHTML = formatGeminiResponseToHtml(articleContent);
+
+        } catch (error) {
+            console.error('Error fetching content from Gemini API:', error);
+            // ▼▼▼ MODIFIED: Error message in English ▼▼▼
+            detailBody.innerHTML = '<p>Sorry, an error occurred while loading the article. Please try again later.</p>';
+        }
     }
 
+    // This function remains unchanged, as it's language-agnostic.
     function generateRelatedPosts(term) {
         const script = document.createElement('script');
         script.src = `https://suggestqueries.google.com/complete/search?jsonp=handleRelatedSuggest&hl=en&client=firefox&q=${encodeURIComponent(term)}`;
         document.head.appendChild(script);
         script.onload = () => script.remove();
-        script.onerror = () => { relatedPostsContainer.innerHTML = '<div class="loading-placeholder">Could not load related recipes.</div>'; script.remove(); }
+        script.onerror = () => { relatedPostsContainer.innerHTML = '<div class="loading-placeholder">Could not load related posts.</div>'; script.remove(); }
     }
 
+    // This function remains unchanged.
     window.handleRelatedSuggest = function(data) {
         const suggestions = data[1];
         relatedPostsContainer.innerHTML = '';
