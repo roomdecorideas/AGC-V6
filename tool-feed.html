@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced RSS Feed Generator | RecipeFiesta</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .setting-item.full-width {
+            width: 100%;
+            flex-basis: 100%;
+        }
+        #keyword-list {
+            width: 100%;
+            box-sizing: border-box; /* Memastikan padding tidak menambah lebar elemen */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo-link"><h1 class="logo">RecipeFiesta</h1></a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <article class="main-article tool-container">
+                <h1>Advanced RSS 2.0 Feed Generator</h1>
+                <p class="tool-description">
+                    This tool generates a custom `feed.xml` file with scheduled posts. Enter your recipe keyword list, select a date range, and the script will automatically distribute the posts evenly across the selected days.
+                </p>
+
+                <div class="tool-settings">
+                    <div class="setting-item full-width">
+                        <label for="keyword-list">Keyword List (one per line):</label>
+                        <textarea id="keyword-list" class="tool-input" rows="10" placeholder="Enter keywords here, one per line..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="tool-settings">
+                     <div class="setting-item">
+                        <label for="start-date">Start Date:</label>
+                        <input type="date" id="start-date" class="tool-input">
+                    </div>
+                    <div class="setting-item">
+                        <label for="end-date">End Date:</label>
+                        <input type="date" id="end-date" class="tool-input">
+                    </div>
+                </div>
+                <button id="generate-btn" class="tool-button">Generate & Download feed.xml</button>
+                
+                <div id="status-output" class="tool-status">
+                    Status: Please enter keywords and select a date range to begin.
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="about.html">About Us</a> |
+                <a href="contact.html">Contact</a> |
+                <a href="privacy.html">Privacy Policy</a>
+            </div>
+            <p>&copy; 2025 RecipeFiesta. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="tool-feed.js"></script>
+
+</body>
+</html>

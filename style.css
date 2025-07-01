@@ -1,0 +1,247 @@
+/* Import font dari Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* Reset dan Pengaturan Dasar */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header dan Navigasi */
+header {
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 1rem 0;    
+    z-index: 1000;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8rem;
+    color: #ff6f61; /* Warna utama baru */
+    font-weight: 700;
+}
+
+.logo-link {
+    text-decoration: none;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover, nav ul li a.active {
+    color: #ff6f61; /* Warna utama baru */
+}
+
+/* Konten Utama */
+main {
+    padding: 2rem 0;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.hero h2 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.hero p {
+    font-size: 1.1rem;
+    color: #777;
+}
+
+.content-grid {
+    display: grid;
+    /* Menampilkan 5 kolom di layar besar */
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px; /* Sedikit mengurangi gap agar pas */
+}
+
+/* Kartu Konten */
+.content-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.content-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.content-card img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    display: block;
+    background-color: #eee;
+}
+
+.content-card-body {
+    padding: 1rem;
+}
+
+.content-card-body h3 {
+    font-size: 1.1rem;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.content-card a {
+    text-decoration: none;
+    color: #333;
+}
+
+/* Loader untuk Infinite Scroll */
+.loader {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #ff6f61; /* Warna utama baru */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 2rem auto;
+    display: none;
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* Footer */
+footer { text-align: center; padding: 2rem 0; margin-top: 2rem; background-color: #333; color: #fff; }
+
+/* --- MOBILE MENU & RESPONSIVE STYLES --- */
+.nav-toggle { display: none; }
+.nav-toggle-label { display: none; cursor: pointer; width: 30px; height: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.nav-toggle-label span, .nav-toggle-label span::before, .nav-toggle-label span::after { display: block; background-color: #333; height: 3px; width: 25px; border-radius: 2px; position: relative; transition: all 0.3s ease-in-out; }
+.nav-toggle-label span::before, .nav-toggle-label span::after { content: ''; position: absolute; }
+.nav-toggle-label span::before { top: -8px; }
+.nav-toggle-label span::after { top: 8px; }
+.nav-toggle:checked + .nav-toggle-label span { background-color: transparent; }
+.nav-toggle:checked + .nav-toggle-label span::before { transform: rotate(45deg); top: 0; }
+.nav-toggle:checked + .nav-toggle-label span::after { transform: rotate(-45deg); top: 0; }
+
+/* ▼▼▼ PERUBAHAN DI SINI: Penyesuaian responsif untuk grid 5 kolom ▼▼▼ */
+@media (max-width: 1200px) {
+    .content-grid {
+        grid-template-columns: repeat(4, 1fr); /* 4 kolom untuk tablet */
+    }
+}
+
+@media (max-width: 992px) {
+    .content-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 kolom untuk tablet kecil */
+    }
+}
+
+@media (max-width: 768px) {
+    .container { padding: 0 15px; }
+    .logo { font-size: 1.5rem; }
+    .nav-toggle-label { display: flex; }
+    nav { position: absolute; top: 100%; left: 0; width: 100%; background-color: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transform: scaleY(0); transform-origin: top; transition: transform 0.3s ease-in-out; }
+    nav ul { flex-direction: column; padding: 1rem 0; }
+    nav ul li { width: 100%; text-align: center; margin-left: 0; }
+    nav ul li a { padding: 1rem; display: block; }
+    .nav-toggle:checked ~ nav { transform: scaleY(1); }
+    .hero h2, .main-article h1 { font-size: 1.8rem; }
+    .hero p, .article-content p { font-size: 1rem; }
+    .main-article { padding: 1.5rem; }
+    .section-title { font-size: 1.5rem; }
+    .download-buttons-container { flex-direction: column; width: 100%; }
+    .tool-input { width: 100%; }
+    
+    .content-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 kolom untuk mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .content-grid {
+        grid-template-columns: 1fr; /* 1 kolom untuk layar sangat kecil */
+    }
+}
+
+/* --- Styles untuk Halaman Detail --- */
+.main-article { background-color: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 3rem; }
+.main-article h1 { font-size: 2.8rem; line-height: 1.2; margin-bottom: 1.5rem; }
+.detail-image { margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+.detail-image img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 8px;
+    background-color: #eee;
+}
+.article-content { margin-top: 2rem; }
+.article-content p { font-size: 1.1rem; margin-bottom: 1.5rem; color: #444; }
+.article-content strong { color: #ff6f61; } /* Warna utama baru */
+.section-title { font-size: 2rem; text-align: center; margin-bottom: 2rem; border-bottom: 2px solid #eee; padding-bottom: 1rem; }
+
+/* --- Style untuk Tombol Download --- */
+.download-buttons-container { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
+/* ▼▼▼ PERUBAHAN DI SINI: Tombol dibuat lebih lebar ▼▼▼ */
+.download-button { 
+    display: inline-block; 
+    background-color: #ff6f61; /* Warna utama baru */ 
+    color: #fff; 
+    padding: 0.8rem 1rem; /* Padding diatur ulang */
+    border-radius: 5px; 
+    text-decoration: none; 
+    font-weight: 600; 
+    text-align: center; 
+    transition: background-color 0.3s ease, transform 0.2s ease; 
+    border: none; 
+    cursor: pointer;
+    flex: 1; /* Membuat tombol meregang mengisi ruang yang tersedia */
+    max-width: 250px; /* Batas lebar maksimum agar tidak terlalu lebar di layar besar */
+}
+.download-button:hover { background-color: #e65a50; /* Warna utama baru - hover */ transform: scale(1.05); }
+
+@media (min-width: 769px) { .nav-toggle-label { display: none !important; } nav { display: block; } }
+
+/* --- Style Tambahan untuk Halaman Tool --- */
+.tool-container { text-align: center; padding: 2rem; }
+.tool-description { max-width: 600px; margin: 0 auto 2rem auto; color: #555; line-height: 1.8; }
+.tool-settings { display: flex; justify-content: center; align-items: center; gap: 2rem; background-color: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; flex-wrap: wrap; }
+.setting-item { display: flex; flex-direction: column; align-items: flex-start; }
+.setting-item label { font-weight: 600; margin-bottom: 0.5rem; color: #555; }
+.tool-input { padding: 0.7rem; font-size: 1rem; border-radius: 5px; border: 1px solid #ccc; width: 200px; }
+.tool-button { background-color: #28a745; color: #fff; border: none; padding: 1rem 2.5rem; font-size: 1.2rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease; }
+.tool-button:hover:not(:disabled) { background-color: #218838; transform: scale(1.05); }
+.tool-button:disabled { background-color: #aaa; cursor: not-allowed; }
+.tool-status { margin-top: 2rem; padding: 1rem; background-color: #e9ecef; border-radius: 5px; font-family: monospace; font-size: 1rem; }
