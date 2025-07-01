@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const keyword = keywordFromQuery.replace(/-/g, ' ').trim();
 
     // ▼▼▼ IMPORTANT: Replace with your Gemini API Key ▼▼▼
-    const GEMINI_API_KEY = 'YOUR_API_KEY'; 
+    const GEMINI_API_KEY = 'AIzaSyAowzSa5MhC7FnHDcfdrM0eGCve0gKRu3w'; 
     const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
 
     function capitalizeEachWord(str) { if (!str) return ''; return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '); }
